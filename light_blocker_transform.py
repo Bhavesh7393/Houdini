@@ -172,11 +172,11 @@ lbt_nodes = []
 hou.Node.setSelected(hou.node('/obj'), False, clear_all_selected=True)
 
 if len(lgt_list) == 0:
-    lbt = lightBlockerTransform()
+    lightBlockerTransform()
     hou.Node.setSelected(lightBlockerTransform.subnet, True)
 else:
     for lgt in lgt_list:
-        lbt = lightBlockerTransform()
+        lightBlockerTransform()
 	lbt_nodes.append(lightBlockerTransform.subnet)
 	hou.Node.setSelected(lightBlockerTransform.subnet, True)
         hou.parm(lgt.path()+'/ar_light_filters').set(lightBlockerTransform.out_lgt.path())
