@@ -10,19 +10,25 @@ which you can manually plug in Arnold Light
 import hou
 
 obj = hou.node('/obj')
-lgt_list = hou.selectedItems()
-lbt_nodes = []
+selection = hou.selectedItems()
+arnold_lights = []
+for light in selection:
+    if light.type().name() == "arnold_light":
+        arnold_lights.append(light)
+light_blocker_transform_nodes = []
 hou.Node.setSelected(hou.node('/obj'), False, clear_all_selected=True)
 
-if len(lgt_list) == 0:
-    lbt = obj.createNode('light_blocker_transform')
-    hou.Node.setSelected(lbt, True)
+if len(arnold_lights) == 0:
+    light_blocker_transform = obj.createNode('light_blocker_transform')
+    hou.Node.setSelected(light_blocker_transform, True)
 else:
-    for lgt in lgt_list:
-        lbt = obj.createNode('light_blocker_transform', 'light_blocker_transform_'+lgt.name())
-        lbt_nodes.append(lbt)
-        hou.Node.setSelected(lbt, True)
-        hou.parm(lgt.path()+'/ar_light_filters').set(lbt.path()+"/matnet1/light_blocker1/OUT_light")
+    for light in arnold_lights:
+        light_blocker_transform = obj.createNode('light_blocker_transform', light.name()+'_light_blocker_transform1')
+        light_blocker_transform_nodes.append(light_blocker_transform)
+        hou.Node.setSelected(light_blocker_transform, True)
+        hou.parm(light.path()+'/ar_light_filters').set(light_blocker_transform.path()+"/matnet1/light_blocker1/OUT_light")
 
-if len(lbt_nodes) != 0:
-    hou.node('/obj').layoutChildren(items=(lbt_nodes))
+if len(light_blocker_transform_nodes) != 0:
+    hou.node('/obj').layoutChildren(items=(light_blocker_transform_nodes))
+else:
+    pass
